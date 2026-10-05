@@ -8,7 +8,7 @@ Two extensions for the [pi coding agent](https://pi.dev).
 pi install npm:@rustywelch/pi-extensions
 ```
 
-Pin a version with `@1.0.1`. Try it for one session without installing:
+Pin a version with `@1.0.2`. Try it for one session without installing:
 
 ```bash
 pi -e npm:@rustywelch/pi-extensions

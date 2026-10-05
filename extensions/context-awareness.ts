@@ -75,9 +75,10 @@ function buildNote(ctx: ExtensionContext): string | null {
 	}
 	if (percent >= PRIME_PERCENT && compactAllowedNow(used, window).ok) {
 		lines.push(
-			"This is a good time to compact IF you are at a clean boundary: the current task is finished, tests are green, " +
-				"and notes or handoff files are saved. If so, call compact_now with what to keep and your next step; you will be " +
-				"resumed automatically. Never call it in the middle of an edit.",
+			"Compaction is now allowed. Compact ONLY if ALL of these are true: the current task is finished, tests are green, " +
+				"notes or handoff files are saved, and nothing is half-edited. If any is false, keep working and do not call " +
+				"compact_now. If all are true, call it once with what to keep and your next step; you will be resumed " +
+				"automatically. Do not call it before the context status says compaction is allowed.",
 		);
 	}
 	return lines.join("\n");
@@ -192,10 +193,11 @@ export default function contextAwareness(pi: ExtensionAPI): void {
 		name: "compact_now",
 		label: "Compact now",
 		description:
-			"Compact the conversation at a clean boundary and then continue automatically. Use only when the current task " +
-			"is finished, tests are green, and notes or handoff files are saved, and the context status says it is a good " +
-			"time. Never call it in the middle of an edit. Your turn ends right after this call; you are resumed with " +
-			"next_step once compaction finishes.",
+			"Compact the conversation at a clean boundary and then continue automatically. Do NOT call this unless the latest " +
+			"context status says \"Compaction is now allowed\" (it is refused below " + MIN_COMPACT_PERCENT + "% full, so an early " +
+			"call only wastes a turn). Use only when the current task is finished, tests are green, notes or handoff files are " +
+			"saved, and nothing is half-edited. Your turn ends right after this call; you are resumed with next_step once " +
+			"compaction finishes.",
 		parameters: Type.Object({
 			keep: Type.String({ description: "What the summary must preserve beyond the defaults (files, decisions, status)." }),
 			next_step: Type.String({ description: "The exact next step you will take after compaction." }),

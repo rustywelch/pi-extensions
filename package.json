@@ -1,0 +1,16 @@
+{
+  "name": "pi-extensions",
+  "version": "1.0.0",
+  "description": "Pi extensions: context-window awareness with self-compaction, and structured code search.",
+  "keywords": ["pi-package", "pi", "pi-extension"],
+  "license": "MIT",
+  "author": "Rusty Welch",
+  "repository": { "type": "git", "url": "git+https://github.com/rustywelch/pi-extensions.git" },
+  "pi": {
+    "extensions": ["./extensions/*.ts"]
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*",
+    "typebox": "*"
+  }
+}

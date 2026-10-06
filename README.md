@@ -1,6 +1,6 @@
 # pi-extensions
 
-Two extensions for the [pi coding agent](https://pi.dev).
+Three extensions for the [pi coding agent](https://pi.dev).
 
 ## Install
 
@@ -45,6 +45,21 @@ Set `PI_COMPACT_MIN_PERCENT=0` to test self-compaction in a short session.
 Pi ships with read, bash, edit, and write, so every search costs a shell round trip. This adds one
 `search` tool with two modes: `content` greps for a pattern inside files, and `files` lists files that
 match a name glob. It uses ripgrep when it is installed and falls back to grep and find otherwise.
+
+## ios-simulator
+
+One `ios_simulator` tool for driving the iOS Simulator, the same loop Claude and ChatGPT use: build, launch,
+look, act, look again.
+
+- **Through `xcrun simctl` (ships with Xcode):** `list`, `boot`, `show` (opens the Simulator window, or Device Hub on Xcode 27, so you can watch and drive the device yourself, for example to enter credentials), `shutdown`, `launch` (installs a built `.app`
+  first when you give `app_path`), `terminate`, `open_url`, and `screenshot`, which comes back as an image the
+  model can see.
+- **Through [AXe](https://github.com/cameroncooke/AXe) (`brew install cameroncooke/axe/axe`):** `tap` (by coordinates, accessibility label or id), `swipe`,
+  `type`, `button`, and `describe_ui`, which returns the accessibility tree with element frames so the model
+  can aim taps instead of guessing from pixels. `simctl` cannot inject touch input, which is why AXe is needed.
+  Without it the other actions still work and the input actions say how to install it.
+
+Coordinates are device points, origin top-left. You need an installed iOS runtime (`xcodebuild -downloadPlatform iOS`).
 
 ## License
 

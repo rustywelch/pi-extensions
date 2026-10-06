@@ -1,7 +1,7 @@
 {
   "name": "@rustywelch/pi-extensions",
-  "version": "1.0.3",
-  "description": "Pi extensions: context-window awareness with self-compaction, and structured code search.",
+  "version": "1.1.0",
+  "description": "Pi extensions: context-window awareness with self-compaction, structured code search, and iOS Simulator control.",
   "keywords": [
     "pi-package",
     "pi",

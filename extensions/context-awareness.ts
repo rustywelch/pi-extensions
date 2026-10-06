@@ -12,10 +12,10 @@
  * Also registers `context_status` so the model can check on demand, and a `/context-note`
  * command that shows the note the model would see next.
  *
- * Self-compaction: from 60% full the note suggests compacting at a clean boundary, and the
+ * Self-compaction: from 70% full the note says to finish the current task and compact at that clean boundary, and the
  * `compact_now` tool queues Pi's own compaction with keep/next-step instructions, ends the turn,
  * and resumes the model automatically when compaction finishes. `/compact-now` does the same for
- * you, without the automatic resume. PI_COMPACT_MIN_PERCENT overrides the 50% floor for testing.
+ * you, without the automatic resume. PI_COMPACT_MIN_PERCENT overrides the 70% floor for testing.
  */
 
 import { readFileSync } from "node:fs";
@@ -25,7 +25,7 @@ import { Type } from "typebox";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
 
 const DEFAULT_RESERVE_TOKENS = 16384;
-const WARN_PERCENT = 75;
+const WARN_PERCENT = 70;
 const CRITICAL_PERCENT = 90;
 
 // Same lookup order Pi documents: model override, then the ordinary setting, then the default.
@@ -70,7 +70,12 @@ function buildNote(ctx: ExtensionContext): string | null {
 		);
 	} else if (percent >= WARN_PERCENT) {
 		lines.push(
-			"Context is getting full. Prefer targeted reads (line ranges, grep) over whole files, and save important findings to files before they are summarized away.",
+			"Context is getting full. Start wrapping up: finish the current task, keep reads targeted (line ranges, grep), " +
+				"and save important findings to files. Then compact at that clean boundary (see below).",
+		);
+	} else {
+		lines.push(
+			`Plenty of room. Keep working normally; do not wrap up early or try to compact before ${WARN_PERCENT}%.`,
 		);
 	}
 	if (percent >= PRIME_PERCENT && compactAllowedNow(used, window).ok) {
@@ -91,8 +96,8 @@ function buildNote(ctx: ExtensionContext): string | null {
 // Guards: a minimum fill level, a cooldown until context grows again, and a per-session cap on
 // automatic resumes so it can never loop.
 
-const PRIME_PERCENT = 60;
-const MIN_COMPACT_PERCENT = Number(process.env.PI_COMPACT_MIN_PERCENT ?? 50);
+const PRIME_PERCENT = WARN_PERCENT;
+const MIN_COMPACT_PERCENT = Number(process.env.PI_COMPACT_MIN_PERCENT ?? WARN_PERCENT);
 const COOLDOWN_PERCENT_POINTS = 20;
 const MAX_AUTO_RESUMES = 5;
 

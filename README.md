@@ -1,6 +1,6 @@
 # pi-extensions
 
-Three extensions for the [pi coding agent](https://pi.dev).
+Four extensions for the [pi coding agent](https://pi.dev).
 
 ## Install
 
@@ -45,6 +45,19 @@ Set `PI_COMPACT_MIN_PERCENT=0` to test self-compaction in a short session.
 Pi ships with read, bash, edit, and write, so every search costs a shell round trip. This adds one
 `search` tool with two modes: `content` greps for a pattern inside files, and `files` lists files that
 match a name glob. It uses ripgrep when it is installed and falls back to grep and find otherwise.
+
+## computer-use
+
+One `computer` tool that drives the macOS desktop, defaulting to the Corti One app (set `PI_COMPUTER_APP` for another).
+`open_app`, `screenshot` (the app window, returned as an image whose coordinates match click coordinates, or `fullscreen`),
+`ui_tree` (the accessibility tree with a click center for every labeled element, including the web content inside
+WebView apps), `click`, `double_click`, `right_click`, `move`, `drag`, `scroll`, `type`, `key` (`cmd+s`, `return`),
+`list_windows`, `wait` and `permissions`. Prefer `ui_tree` to guessing positions from pixels.
+
+Screenshots use `screencapture`. Input and the tree come from a small Swift helper (`extensions/computer-use/cu.swift`),
+compiled on first use into `~/.cache/pi-computer-use/cu` (needs Xcode command line tools). Grant the app that runs Pi
+Accessibility and Screen Recording in System Settings > Privacy & Security; the `permissions` action reports both.
+The tool description tells the model to stop at sign-in prompts and confirm before irreversible clicks.
 
 ## ios-simulator
 

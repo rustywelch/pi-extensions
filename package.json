@@ -1,6 +1,6 @@
 {
   "name": "@rustywelch/pi-extensions",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Pi extensions: context-window awareness with self-compaction, and structured code search.",
   "keywords": [
     "pi-package",
@@ -17,6 +17,13 @@
     "extensions": [
       "./extensions/*.ts"
     ]
+  },
+  "files": [
+    "extensions",
+    "lib"
+  ],
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
   },
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*",

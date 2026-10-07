@@ -23,6 +23,7 @@ import { homedir } from "node:os";
 import { join } from "node:path";
 import { Type } from "typebox";
 import type { ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
+import { captureWorkspaceCheckpoint, resumeVerification } from "../lib/context-checkpoint.mjs";
 
 const DEFAULT_RESERVE_TOKENS = 16384;
 const WARN_PERCENT = 70;
@@ -117,27 +118,30 @@ function compactAllowedNow(used: number, window: number): { ok: boolean; reason?
 	return { ok: true };
 }
 
-function compactionInstructions(keep: string, nextStep: string): string {
+function compactionInstructions(keep: string, nextStep: string, checkpoint: ReturnType<typeof captureWorkspaceCheckpoint>): string {
 	return [
 		"Preserve, precisely: the current task and its next step; paths of files read, changed, or created; test and",
 		"check status; decisions made and their reasons; open problems; the sprint brief or handoff file paths.",
 		"Drop: exploration output, full file contents, long tool output, and superseded attempts.",
 		`The agent's own priorities for what to keep: ${keep}`,
 		`The agent's next step after compaction: ${nextStep}`,
+		resumeVerification(checkpoint),
 	].join(" ");
 }
 
-function resumeMessage(nextStep: string): string {
+function resumeMessage(nextStep: string, checkpoint: ReturnType<typeof captureWorkspaceCheckpoint>): string {
 	return (
 		"[Automatic resume after self-compaction] The summary above holds the state of this work. " +
-		`Continue with: ${nextStep}. Re-read only the files you need, by line range where possible.`
+		`${resumeVerification(checkpoint)} Continue with: ${nextStep}. ` +
+		"Re-read only the files you need, by line range where possible."
 	);
 }
 
 function startCompaction(pi: ExtensionAPI, ctx: ExtensionContext, keep: string, nextStep: string, autoResume: boolean): void {
 	compacting = true;
+	const checkpoint = captureWorkspaceCheckpoint(ctx.cwd || process.cwd());
 	ctx.compact({
-		customInstructions: compactionInstructions(keep, nextStep),
+		customInstructions: compactionInstructions(keep, nextStep, checkpoint),
 		onComplete: (result) => {
 			compacting = false;
 			const window = ctx.getContextUsage()?.contextWindow ?? ctx.model?.contextWindow;
@@ -146,7 +150,7 @@ function startCompaction(pi: ExtensionAPI, ctx: ExtensionContext, keep: string, 
 			ctx.ui.notify(`Compacted: ${fmt(result.tokensBefore)} -> ${after ? fmt(after) : "?"} est. tokens`, "info");
 			if (autoResume) {
 				autoResumes += 1;
-				pi.sendUserMessage(resumeMessage(nextStep), ctx.isIdle() ? undefined : { deliverAs: "followUp" });
+				pi.sendUserMessage(resumeMessage(nextStep, checkpoint), ctx.isIdle() ? undefined : { deliverAs: "followUp" });
 			}
 		},
 		onError: (error) => {

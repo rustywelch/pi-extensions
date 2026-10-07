@@ -8,7 +8,7 @@ Two extensions for the [pi coding agent](https://pi.dev).
 pi install npm:@rustywelch/pi-extensions
 ```
 
-Pin a version with `@1.0.2`. Try it for one session without installing:
+Pin a version with `@1.0.3`. Try it for one session without installing:
 
 ```bash
 pi -e npm:@rustywelch/pi-extensions
@@ -23,13 +23,17 @@ full its context window is on every request, and lets it compact itself at a sen
   window size, percent, and the distance to Pi's auto-compaction (read from your compaction settings,
   including per-model overrides). The note is added only to the request and never saved to the session,
   so it does not fill the transcript or break prompt caching.
-- **Warnings** at 75% (prefer targeted reads, save findings to files) and 90% (finish the step, write
+- **Warnings** at 70% (prefer targeted reads, save findings to files) and 90% (finish the step, write
   results now).
-- **Self-compaction.** From 60% full, the note suggests compacting at a clean boundary: task finished,
+- **Self-compaction.** From 70% full, the note suggests compacting at a clean boundary: task finished,
   tests green, notes saved. The `compact_now` tool takes `keep` and `next_step`, queues Pi's own
   compaction with matching instructions, ends the turn, and sends one automatic resume message when
   compaction finishes, so the model continues on its own.
-- **Guards:** no compaction below 50% full, no repeat until context grows 20 more points, at most five
+- **Resume verification.** Before compaction it records the working directory, Git branch, HEAD,
+  upstream tracking ref, and dirty paths. The automatic resume labels that checkpoint as historical
+  and requires fresh verification of Git plus task-critical permissions, CI, deployments, and APIs
+  before the model edits or writes anything.
+- **Guards:** no compaction below 70% full, no repeat until context grows 20 more points, at most five
   automatic resumes per session, and no resume if compaction fails.
 - **Extras:** a `context_status` tool, a `/context-note` command that shows the note the model will see
   next, and `/compact-now` to run the same focused compaction yourself without the automatic resume.

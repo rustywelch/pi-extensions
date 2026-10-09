@@ -1,17 +1,17 @@
-# pi-extensions
+# pi-fuel-gauge
 
 Four extensions for the [pi coding agent](https://pi.dev).
 
 ## Install
 
 ```bash
-pi install npm:@rustywelch/pi-extensions
+pi install npm:@rustywelch/pi-fuel-gauge
 ```
 
 Pin a version with `@1.0.3`. Try it for one session without installing:
 
 ```bash
-pi -e npm:@rustywelch/pi-extensions
+pi -e npm:@rustywelch/pi-fuel-gauge
 ```
 
 ## context-awareness

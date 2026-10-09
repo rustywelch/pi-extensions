@@ -1,5 +1,5 @@
 {
-  "name": "@rustywelch/pi-extensions",
+  "name": "@rustywelch/pi-fuel-gauge",
   "version": "1.2.0",
   "description": "Pi extensions: context-window awareness with self-compaction, structured code search, iOS Simulator control, and macOS desktop control.",
   "keywords": [
@@ -11,7 +11,7 @@
   "author": "Rusty Welch",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rustywelch/pi-extensions.git"
+    "url": "git+https://github.com/rustywelch/pi-fuel-gauge.git"
   },
   "pi": {
     "extensions": [
@@ -29,9 +29,9 @@
     "@earendil-works/pi-coding-agent": "*",
     "typebox": "*"
   },
-  "homepage": "https://github.com/rustywelch/pi-extensions#readme",
+  "homepage": "https://github.com/rustywelch/pi-fuel-gauge#readme",
   "bugs": {
-    "url": "https://github.com/rustywelch/pi-extensions/issues"
+    "url": "https://github.com/rustywelch/pi-fuel-gauge/issues"
   },
   "publishConfig": {
     "access": "public"
